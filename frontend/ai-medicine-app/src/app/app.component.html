@@ -1,0 +1,116 @@
+<div class="container mt-5">
+  <h2 class="text-center text-primary">Personalized Medicine System</h2>
+
+  <div class="card shadow p-4 mt-4">
+    <form>
+      <!-- Name Field -->
+      <div class="mb-3">
+        <label class="form-label">Patient Name:</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="patient.name"
+          name="patientName"
+          placeholder="Enter name"
+          required
+        />
+      </div>
+
+      <!-- Age Field -->
+      <div class="mb-3">
+        <label class="form-label">Age:</label>
+        <input
+          type="number"
+          class="form-control"
+          [(ngModel)]="patient.age"
+          name="patientAge"
+          placeholder="Enter age"
+          required
+        />
+      </div>
+
+      <!-- Disease Field (Used as Symptom) -->
+      <div class="mb-3">
+        <label class="form-label">Disease (Enter Symptom):</label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="patient.disease"
+          name="patientDisease"
+          placeholder="Enter disease or symptom"
+          required
+        />
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="d-flex justify-content-between">
+        <button
+          type="button"
+          class="btn btn-success w-45"
+          (click)="addPatient()"
+        >
+          Save Patient
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary w-45"
+          (click)="predictTreatment()"
+        >
+          Get Treatment
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Loader -->
+  <div class="mt-4 text-center" *ngIf="isLoading">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p>Predicting treatment...</p>
+  </div>
+
+  <!-- Recommended Treatment Display -->
+  <div class="card shadow p-4 mt-4" *ngIf="treatment">
+    <h4 class="text-center text-success mb-3">Recommended Treatment</h4>
+
+    <!-- Disease -->
+    <div class="mb-2">
+      <strong>Disease:</strong>
+      <span class="ms-2">{{ treatment.Disease }}</span>
+    </div>
+
+    <!-- Description -->
+    <div class="mb-2">
+      <strong>Description:</strong>
+      <span class="ms-2">{{ treatment.Description }}</span>
+    </div>
+
+    <!-- Precautions (Array) -->
+    <div class="mb-2">
+      <strong>Precautions:</strong>
+      <ul class="list-group mt-2">
+        <!-- If "Precautions" is an array -->
+        <li class="list-group-item" *ngFor="let item of treatment.Precautions">
+          {{ item }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Medications -->
+    <div class="mb-2">
+      <strong>Medications:</strong>
+      <span class="ms-2">{{ treatment.Medications }}</span>
+    </div>
+
+    <!-- Diet -->
+    <div class="mb-2">
+      <strong>Diet:</strong>
+      <span class="ms-2">{{ treatment.Diet }}</span>
+    </div>
+
+    <!-- Workout -->
+    <div class="mb-2">
+      <strong>Workout:</strong>
+      <span class="ms-2">{{ treatment.Workout }}</span>
+    </div>
+  </div>
+</div>
