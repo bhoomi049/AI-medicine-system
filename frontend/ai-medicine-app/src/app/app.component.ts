@@ -5,18 +5,19 @@ import { FormsModule } from '@angular/forms';   // For [(ngModel)]
 
 @Component({
   selector: 'app-root',
-  standalone: true, // ✅ Standalone component
+  standalone: true, // Standalone component
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  imports: [CommonModule, FormsModule], // ✅ Add necessary modules
+  imports: [CommonModule, FormsModule] // Import required modules
 })
 export class AppComponent {
   title = 'AI Medicine System';
 
-  // Use 'any' or a custom interface instead of 'string'
+  // Here, 'disease' is being used as an input for symptoms.
+  // You might consider renaming it to 'symptoms' for clarity.
   patient = { name: '', age: 0, disease: '' };
-  treatment: any = null; // ✅ Changed from '' to any = null
-  isLoading = false;     // For *ngIf loading spinner
+  treatment: any = null; // Will store the treatment recommendation
+  isLoading = false;     // For showing a loading indicator
 
   constructor(private patientService: PatientService) {}
 
@@ -28,24 +29,26 @@ export class AppComponent {
         this.isLoading = false;
       })
       .catch(error => {
-        console.log(error);
+        console.error("Error adding patient:", error);
         this.isLoading = false;
       });
   }
 
   predictTreatment() {
     this.isLoading = true;
-    // Send an object with a 'symptoms' array (your backend expects this)
-    const features = { symptoms: [this.patient.disease] };
+    // Send an object with a 'symptoms' array to the backend.
+    // Here we assume that the input in the "disease" field is a comma-separated list of symptoms.
+    const symptomsArray = this.patient.disease.split(',').map(s => s.trim());
+    const features = { symptoms: symptomsArray };
 
     this.patientService.getPrediction(features)
       .then(response => {
-        // The backend returns { treatment: {...} }
+        console.log("API response:", response.data);
         this.treatment = response.data.treatment;
         this.isLoading = false;
       })
       .catch(error => {
-        console.log(error);
+        console.error("Prediction error:", error);
         this.isLoading = false;
       });
   }

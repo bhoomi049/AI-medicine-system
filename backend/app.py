@@ -17,7 +17,7 @@ db = client["medical_db"]
 patients_collection = db["patients"]
 
 # ---------------------------------------------------------------------
-# 2. Load trained model (SVC with kernel='linear')
+# 2. Load trained model (for verification only; prediction function loads it internally)
 # ---------------------------------------------------------------------
 model_path = "model/treatment_model.pkl"
 try:
@@ -47,7 +47,7 @@ def add_patient():
 @app.route('/predict', methods=['POST'])
 def predict():
     data = request.json
-    print("Received request data:", data)  # Debugging print
+    print("Received request data:", data)  # Debug print
 
     if not isinstance(data, dict) or 'features' not in data:
         return jsonify({'error': 'Invalid request. No features provided.'}), 400
@@ -56,12 +56,15 @@ def predict():
     if not isinstance(features, dict):
         return jsonify({'error': 'Invalid data format. "features" must be a dictionary.'}), 400
 
-    print("Extracted Features:", features)  # Debugging print
+    print("Extracted Features:", features)  # Debug print
 
-    # Call ML model function from train_model.py
-    treatment = predict_treatment(features)
-
-    return jsonify({'treatment': treatment})
+    try:
+        # Call the ML prediction function from train_model.py
+        treatment = predict_treatment(features)
+        return jsonify({'treatment': treatment})
+    except Exception as e:
+        print("Error during prediction:", str(e))
+        return jsonify({'error': str(e)}), 500
 
 # ---------------------------------------------------------------------
 # 4. Run Flask (Development Mode)

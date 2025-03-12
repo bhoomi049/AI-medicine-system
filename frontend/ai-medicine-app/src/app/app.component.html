@@ -1,116 +1,59 @@
-<div class="container mt-5">
-  <h2 class="text-center text-primary">Personalized Medicine System</h2>
+<div class="container mt-4">
+  <h1>{{ title }}</h1>
+  
+  <!-- Patient Input Form (unchanged) -->
+  <div class="form-group">
+    <label>Name:</label>
+    <input [(ngModel)]="patient.name" class="form-control" placeholder="Enter patient name" />
+  </div>
+  <div class="form-group">
+    <label>Age:</label>
+    <input type="number" [(ngModel)]="patient.age" class="form-control" placeholder="Enter patient age" />
+  </div>
+  <div class="form-group">
+    <label>Symptoms (comma-separated):</label>
+    <input [(ngModel)]="patient.disease" class="form-control" placeholder="fever, cough, headache" />
+  </div>
+  <button class="btn btn-primary" (click)="addPatient()">Save Patient</button>
+  <button class="btn btn-success ml-2" (click)="predictTreatment()">Get Treatment</button>
 
-  <div class="card shadow p-4 mt-4">
-    <form>
-      <!-- Name Field -->
-      <div class="mb-3">
-        <label class="form-label">Patient Name:</label>
-        <input
-          type="text"
-          class="form-control"
-          [(ngModel)]="patient.name"
-          name="patientName"
-          placeholder="Enter name"
-          required
-        />
-      </div>
-
-      <!-- Age Field -->
-      <div class="mb-3">
-        <label class="form-label">Age:</label>
-        <input
-          type="number"
-          class="form-control"
-          [(ngModel)]="patient.age"
-          name="patientAge"
-          placeholder="Enter age"
-          required
-        />
-      </div>
-
-      <!-- Disease Field (Used as Symptom) -->
-      <div class="mb-3">
-        <label class="form-label">Disease (Enter Symptom):</label>
-        <input
-          type="text"
-          class="form-control"
-          [(ngModel)]="patient.disease"
-          name="patientDisease"
-          placeholder="Enter disease or symptom"
-          required
-        />
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="d-flex justify-content-between">
-        <button
-          type="button"
-          class="btn btn-success w-45"
-          (click)="addPatient()"
-        >
-          Save Patient
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary w-45"
-          (click)="predictTreatment()"
-        >
-          Get Treatment
-        </button>
-      </div>
-    </form>
+  <!-- Loading Spinner -->
+  <div *ngIf="isLoading" class="mt-3">
+    <p>Loading...</p>
   </div>
 
-  <!-- Loader -->
-  <div class="mt-4 text-center" *ngIf="isLoading">
-    <div class="spinner-border text-primary" role="status"></div>
-    <p>Predicting treatment...</p>
-  </div>
-
-  <!-- Recommended Treatment Display -->
-  <div class="card shadow p-4 mt-4" *ngIf="treatment">
-    <h4 class="text-center text-success mb-3">Recommended Treatment</h4>
-
-    <!-- Disease -->
-    <div class="mb-2">
-      <strong>Disease:</strong>
-      <span class="ms-2">{{ treatment.Disease }}</span>
+  <!-- Recommended Treatment Card -->
+  <div class="card mt-4" *ngIf="treatment">
+    <div class="card-header bg-success text-white">
+      <h4>Recommended Treatment for {{ treatment.Disease }}</h4>
     </div>
+    <div class="card-body">
+      <div class="mb-3">
+        <h5>Description</h5>
+        <p>{{ treatment.Description }}</p>
+      </div>
 
-    <!-- Description -->
-    <div class="mb-2">
-      <strong>Description:</strong>
-      <span class="ms-2">{{ treatment.Description }}</span>
-    </div>
+      <div class="mb-3">
+        <h5>Precautions</h5>
+        <ul>
+          <li *ngFor="let precaution of treatment.Precautions">{{ precaution }}</li>
+        </ul>
+      </div>
 
-    <!-- Precautions (Array) -->
-    <div class="mb-2">
-      <strong>Precautions:</strong>
-      <ul class="list-group mt-2">
-        <!-- If "Precautions" is an array -->
-        <li class="list-group-item" *ngFor="let item of treatment.Precautions">
-          {{ item }}
-        </li>
-      </ul>
-    </div>
+      <div class="mb-3">
+        <h5>Medications</h5>
+        <p>{{ treatment.Medications }}</p>
+      </div>
 
-    <!-- Medications -->
-    <div class="mb-2">
-      <strong>Medications:</strong>
-      <span class="ms-2">{{ treatment.Medications }}</span>
-    </div>
+      <div class="mb-3">
+        <h5>Diet</h5>
+        <p>{{ treatment.Diet }}</p>
+      </div>
 
-    <!-- Diet -->
-    <div class="mb-2">
-      <strong>Diet:</strong>
-      <span class="ms-2">{{ treatment.Diet }}</span>
-    </div>
-
-    <!-- Workout -->
-    <div class="mb-2">
-      <strong>Workout:</strong>
-      <span class="ms-2">{{ treatment.Workout }}</span>
+      <div>
+        <h5>Workout</h5>    
+        <p>{{ treatment.Workout }}</p>
+      </div>
     </div>
   </div>
 </div>
